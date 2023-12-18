@@ -68,18 +68,26 @@ function Header() {
 }
 
 function Menue() {
+  const pizzas = pizzaData;
+  const pizzaNum = pizzas.length;
   return (
     <main className="menu">
+      {pizzaNum > 0 ? (
+        <ul className="pizzas">
+          {pizzas.map((pizza) => (
+            <Pizza pizzaObj={pizza} key={pizza.name} />
+          ))}
+        </ul>
+      ) : (
+        <p> We are stil working on our menue, Please come back :) </p>
+      )}
       <h1>Our Menue</h1>
-      <ul className="pizzas">
-        {pizzaData.map((pizza) => (
-          <Pizza pizzaObj={pizza} key={pizza.name} />
-        ))}
-      </ul>
     </main>
   );
 }
+
 function Pizza(props) {
+  if (props.pizzaObj.soldOut) return null;
   return (
     <li className="pizza">
       <img src={props.pizzaObj.photoName} alt={props.pizzaObj.name} />
@@ -92,17 +100,38 @@ function Pizza(props) {
   );
 }
 function Footer() {
-  const Hour = new Date().getHours();
-  const OpenTime = 12;
-  const CloseTime = 22;
-  const OpenHours = Hour >= OpenTime && Hour <= CloseTime;
+  const hour = new Date().getHours();
+  const openTime = 12;
+  const closeTime = 22;
+  const isOpen = hour >= openTime && hour <= closeTime;
 
   // if (Hour >= OpenTime && Hour <= CloseTime) alert("Resturant Currently Close");
   // else alert("Resturant is Currently Open");
   return (
     <footer className="footer">
-      {new Date().toLocaleTimeString()}.we are currenty open!
+      {isOpen ? (
+        <Order closeTime={closeTime} />
+      ) : (
+        <p>
+          The resturant in Currentlty Closed ; we are happy to have you between{" "}
+          {openTime}.00 and {closeTime}.00
+        </p>
+      )}
+      {/* {new Date().toLocaleTimeString()}.we are currenty open! */}
     </footer>
+  );
+}
+
+function Order(props) {
+  return (
+    <div className="order">
+      <p>
+        {" "}
+        We Are Currentlty Open until {props.closeTime}.00 Come Visit or order
+        online
+      </p>
+      <button className="btn">Order</button>
+    </div>
   );
 }
 
